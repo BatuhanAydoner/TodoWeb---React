@@ -8,7 +8,7 @@ class Tasks extends Component {
                 <ul className="task-list">
                     {
                         this.props.tasks.map((task, index) => {
-                            return <TaskItem key={index} task={task} />
+                            return <TaskItem key={index} task={task} deleteTask={this.props.deleteTask} />
                         })
                     }
                 </ul>
