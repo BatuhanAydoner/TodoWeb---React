@@ -1,20 +1,22 @@
-import React, { Component } from 'react'
-import TaskItem from './TaskItem';
+import React, { Component } from "react";
+import TaskItem from "./TaskItem";
 
-class Tasks extends Component {
-    render() {
-        return (
-            <div className="task-container">
-                <ul className="task-list">
-                    {
-                        this.props.tasks.map((task, index) => {
-                            return <TaskItem key={index} task={task} deleteTask={this.props.deleteTask} />
-                        })
-                    }
-                </ul>
-            </div>
-        );
-    }
-}
+const Tasks = (props) => {
+  return (
+    <div className="task-container">
+      <ul className="task-list">
+        {props.tasks.map((task, index) => {
+          return (
+            <TaskItem
+              key={task}
+              task={task}
+              deleteTask={props.deleteTask}
+            />
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
 
-export default Tasks
+export default Tasks;

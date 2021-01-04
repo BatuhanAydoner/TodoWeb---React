@@ -1,35 +1,32 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
-class TaskItem extends Component {
+const TaskItem = (props) => {
+  const taskCompleted = (e) => {
+    let container = e.target.parentElement;
+    container.classList.toggle("task-completed");
+  };
 
-    constructor(props) {
-        super(props);
-        this.deleteTask = this.deleteTask.bind(this);
-    }
+  const deleteTask = (e) => {
+    let container = e.target.parentElement;
+    container.classList.toggle("anim");
 
-    taskCompleted(e) {
-        let container = e.target.parentElement;
-        container.classList.toggle('task-completed');
-    }
+    container.addEventListener("transitionend", (e) => {
+      let task = container.children[0].textContent;
+      props.deleteTask(task);
+    });
+  };
 
-    deleteTask(e) {
-        let container = e.target.parentElement;
-        container.classList.toggle("anim");
+  return (
+    <div className="task-item">
+      <li className="task-desc">{props.task}</li>
+      <button className="task-btn task-completed" onClick={taskCompleted}>
+        <i className="far fa-check-square"></i>
+      </button>
+      <button className="task-btn task-delete" onClick={deleteTask}>
+        <i className="far fa-trash-alt"></i>
+      </button>
+    </div>
+  );
+};
 
-        container.addEventListener('transitionend', (e) => {
-            let task = container.children[0].textContent;
-        this.props.deleteTask(task);
-        });
-    }
-    render() {
-        return (
-            <div className="task-item">
-                <li className="task-desc">{this.props.task}</li>
-                <button className="task-btn task-completed" onClick={this.taskCompleted}><i className="far fa-check-square"></i></button>
-                <button className="task-btn task-delete" onClick={this.deleteTask} ><i className="far fa-trash-alt"></i></button>
-            </div>
-        );
-    }
-}
-
-export default TaskItem
+export default TaskItem;

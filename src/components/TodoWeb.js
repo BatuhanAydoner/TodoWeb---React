@@ -1,53 +1,23 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import Header from "./Header";
 import Action from "./Action";
 import Tasks from "./Tasks";
 
-export class TodoWeb extends Component {
-  constructor(props) {
-    super(props);
-    this.getTasksFromLocalStorage = this.getTasksFromLocalStorage.bind(this);
-    this.deleteTaskFromLocalStorage = this.deleteTaskFromLocalStorage.bind(this);
-    this.addTask = this.addTask.bind(this);
-    this.deleteTask = this.deleteTask.bind(this);
-    this.state = {
-      items: [],
-    };
-  }
+const TodoWeb = () => {
+  const [items, setItems] = useState([]);
 
-  componentDidMount() {
-    this.getTasksFromLocalStorage();
-  }
+  const addTask = (task) => {
+    addTaskToLocalStorage(task);
 
-  render() {
-    return (
-      <div>
-        <Header title={"TodoWeb"} />
-        <Action addTask={this.addTask} />
-        <Tasks
-          tasks={this.state.items}
-          deleteTask={this.deleteTaskFromLocalStorage}
-        />
-      </div>
-    );
-  }
+    setItems(items.concat(task));
+  };
 
-  addTask(task) {
-    this.addTaskToLocalStorage(task);
-
-    this.setState((prevState) => {
-      return {
-        items: prevState.items.concat(task),
-      };
-    });
-  }
-
-  deleteTask(task) {
-      this.deleteTaskFromLocalStorage(task);
-  }
+  const deleteTask = (task) => {
+    this.deleteTaskFromLocalStorage(task);
+  };
 
   // Return local storage items as an array.
-  localStorageToArray() {
+  const localStorageToArray = () => {
     let arr;
 
     if (localStorage.getItem("todoweb") === null) {
@@ -57,36 +27,50 @@ export class TodoWeb extends Component {
     }
 
     return arr;
-  }
+  };
 
   // Get task items from local storage.
-  getTasksFromLocalStorage(params) {
-    let arr = this.localStorageToArray();
-    this.setState({ items: arr });
-  }
+  const getTasksFromLocalStorage = (params) => {
+    let arr = localStorageToArray();
+    setItems(arr);
+  };
 
   // Save a task to local storage.
-  addTaskToLocalStorage(task) {
-    let arr = this.localStorageToArray();
+  const addTaskToLocalStorage = (task) => {
+    let arr = localStorageToArray();
 
     arr.push(task);
 
     localStorage.setItem("todoweb", JSON.stringify(arr));
-  }
+  };
 
   // Delete a task from local storage.
-  deleteTaskFromLocalStorage(task) {
-    let arr = this.state.items;
+  const deleteTaskFromLocalStorage = (task) => {
+    let arr = items;
 
     let indexOfTask = arr.indexOf(task);
 
     let item = arr.splice(indexOfTask, 1);
+    console.log(arr);
     localStorage.setItem("todoweb", JSON.stringify(arr));
 
-    this.setState({
-      items: arr,
-    });
-  }
-}
+    setItems(arr);
+  };
+
+  useEffect(() => {
+    getTasksFromLocalStorage();
+  }, []);
+
+  return (
+    <div>
+      <Header title={"TodoWeb"} />
+      <Action addTask={addTask} />
+      <Tasks
+        tasks={items}
+        deleteTask={deleteTaskFromLocalStorage}
+      />
+    </div>
+  );
+};
 
 export default TodoWeb;
